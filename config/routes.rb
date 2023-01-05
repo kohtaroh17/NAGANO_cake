@@ -1,15 +1,52 @@
 Rails.application.routes.draw do
-# 顧客用
-# URL /customers/sign_in ...
-devise_for :customers,skip: [:passwords], controllers: {
+
+devise_for :customers, controllers: {
   registrations: "public/registrations",
   sessions: 'public/sessions'
 }
+  get 'about' => 'customer/items#about'
+  root 'public/items#top'
 
-# 管理者用
-# URL /admin/sign_in ...
-devise_for :admin, skip: [:registrations, :passwords] ,controllers: {
+  scope module: :public do
+    resources :items,only: [:index,:show]
+    get 'customer/edit' => 'customers#edit'
+    put 'customer' => 'customers#update'
+
+    resources :customers,only: [:show] do
+     collection do
+         get 'quit'
+         patch 'out'
+      end
+
+      resources :cart_items,only: [:index,:update,:create,:destroy] do
+        collection do
+          delete '/' => 'cart_items#all_destroy'
+        end
+      end
+
+      resources :orders,only: [:new,:index,:show,:create] do
+        collection do
+          post 'log'
+          get 'thanx'
+        end
+      end
+
+      resources :addresses,only: [:index,:create,:edit,:update,:destroy]
+    end
+   end
+
+devise_for :admin, controllers: {
   sessions: "admin/sessions"
 }
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-end
+namespace :admin do
+    resources :customers,only: [:index,:show,:edit,:update]
+    resources :items,only: [:index,:new,:create,:show,:edit,:update,]
+    resources :genres,only: [:index,:create,:edit,:update, :show]
+    resources :orders,only: [:index,:show,:update] do
+  	  member do
+        get :current_index
+        resources :order_items,only: [:update]
+      end
+     end
+    end
+ end

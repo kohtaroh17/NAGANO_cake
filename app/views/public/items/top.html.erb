@@ -1,0 +1,29 @@
+<% provide(:title, "ホーム") %>
+<body class="test">
+<div class="container">
+ <div class="row">
+  <div class="col-xs-12">
+   <div class = "sample">
+     <p>
+     <span class="welcome">Welcome NaganoCake</span><br>
+     このサイトは、ケーキ販売のECサイトになります。<br>
+     会員でない方も商品の閲覧はできますが、<br>
+     購入には会員登録が必要になります。<br>
+     </p>
+   </div>
+
+
+
+    <h2 class="toppage-head">オススメ商品</h2>
+    <!-- ランダムに4つ表示されるようになっています -->
+     <% @items.first(5). each do |item| %>
+      <%= render "item_each", item: item %>
+     <% end %>
+     <div class="col-xs-12">
+       <%= link_to "もっと見る", items_path, class: "btn-link  pull-right" %>
+     </div>
+   </div>
+
+  </div>
+</div>
+</body>

@@ -1,0 +1,29 @@
+
+<div class="row">
+  <div class="col-xs-12">
+    <%= form_with model: @item, url: admin_items_path, method: :post do |f| %>
+     <h2>商品新規登録</h2>
+      <div class="col-xs-4 col-xs-offset-1">
+        <h4>商品画像</h4>
+          <%= f.file_field :image, accept:"image/*" %>
+        <h4>商品名</h4>
+          <%= f.text_field :name %>
+        <h4>商品説明</h4>
+          <%= f.text_area :introduction %>
+        <h4>ジャンル</h4>
+          <%= f.collection_select :genre_id, Genre.all, :id, :name, include_blank: "--選択してください--" %>
+        <h4>税抜価格</h4>
+          <%= f.text_field :price %>円
+        <h4>販売ステータス</h4>
+          <%= f.radio_button :is_active, true %>販売中
+          <%= f.radio_button :is_active, false %>販売停止
+      </div>
+      <div class="col-xs-6">
+        <div class="actions col-xs-7">
+  	      <%= f.submit "新規登録", class: "btn btn-primary btn-lg pull-right" %>
+        </div>
+
+      </div>
+    <% end %>
+  </div>
+</div>

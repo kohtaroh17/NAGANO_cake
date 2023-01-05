@@ -1,7 +1,5 @@
 class Admin::ItemsController < ApplicationController
-  before_action :set_item, only: [:show, :edit, :update]
-  before_action :set_genres, only: [:new, :edit, :index, :create, :update]
-  before_action :authenticate_admin!
+  before_action :authenticate_admin!, except: [:index]
 
   def top
     now = Time.current
@@ -13,7 +11,7 @@ class Admin::ItemsController < ApplicationController
   end
 
   def create
-    @item = Itrem.new(product_params)
+    @item = Item.new(item_params)
     if @item.save
       flash[:notice] = "新商品を登録しました"
       redirect_to admin_item_path(@item)
@@ -23,10 +21,11 @@ class Admin::ItemsController < ApplicationController
   end
 
   def index
-    @item = Item.all.page(params[:page]).per(10)
+    @items = Item.all.page(params[:page]).per(10)
   end
 
   def show
+    @items = Item.find(params[:id])
   end
 
   def edit
@@ -44,12 +43,7 @@ class Admin::ItemsController < ApplicationController
   private
 
   def item_params
-    params.require(:item).permit(:name, :image, :explanation,
-       :genre_id, :tax_out_price, :is_sale)
+    params.require(:item).permit(:name, :image, :introduction, :genre_id, :price, :is_active)
   end
 
-  def set_genres
-    @genres = Genre.where(is_valid: true)
-  end
-  
 end

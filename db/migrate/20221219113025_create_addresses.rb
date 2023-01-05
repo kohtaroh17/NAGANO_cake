@@ -6,9 +6,6 @@ class CreateAddresses < ActiveRecord::Migration[6.1]
       t.string :name
       t.string :postal_code
       t.string :address
-      t.datatime :created_at
-      t.datetime :update_at
-
       t.timestamps
     end
   end

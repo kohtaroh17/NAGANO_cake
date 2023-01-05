@@ -62,8 +62,8 @@ class Public::OrdersController < ApplicationController
     # カート商品の情報を注文商品に移動
     @cart_items = current_cart
     @cart_items.each do |cart_item|
-    OrderDetail.create(
-      product:  cart_item.product,
+    OrderItem.create(
+      item:  cart_item.item,
       order:    @order,
       quantity: cart_item.quantity,
       subprice: sub_price(cart_item)
@@ -82,7 +82,7 @@ class Public::OrdersController < ApplicationController
 
 	def show
 	  @order = Order.find(params[:id])
-    @order_details = @order.order_details
+    @order_items = @order.order_items
 	end
 
   private
