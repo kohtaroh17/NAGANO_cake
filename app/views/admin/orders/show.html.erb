@@ -1,109 +1,98 @@
-<% provide(:title, "注文履歴詳細") %>
-<h2 class="head-line title_h2 text-center">注文履歴詳細</h2>
-  <div class="row">
-    <div class="col-xs-12" >
-      <div class="col-xs-9">
-       <div class="field">
-        <div class="col-xs-4">
-          購入者
-        </div>
-         <div class="col-xs-8">
-          <%= @order.name %>
-         </div>
-       </div>
+<div class="container">
+<h3>注文履歴詳細</h3>
+<div class="row">
+  <div class="col-xs-6">
 
-	    <div class="field">
-	      <div class="col-xs-4">
-	        配送先
-	      </div>
-	      <div class="col-xs-8">
-	        <%= full_address(@order) %>
-	      </div>
-	    </div>
-
-	    <div class="field">
-	      <div class="col-xs-4">
-	        支払い方法
-	      </div>
-	      <div class="col-xs-8">
-	        <%= @order.payment_method %>
-	      </div>
-	    </div>
-
- 	  <%= form_for(@order, url: admin_order_path, method: :patch) do |f| %>
- 	    <div class="col-xs-4">注文ステータス</div>
-      	  <div class="col-xs-6">
-            <%= f.select :order_status, Order.order_statuses.keys, class: "order_status" %>
-          </div>
-
-      	<div class="actions">
-          <div class="col-xs-2"><%= f.submit '更新'  ,class: "btn btn-primary" %></div>
-      	</div>
-      <% end %>
+      <div>
+        <p>
+          <strong class="col-xs-2">購入者</strong>
+          <%= link_to admin_customer_path(@order) do %>
+            <%= @order.customer.last_name %><%= @order.customer.first_name %>
+          <% end %>
+        </p>
       </div>
-
-	  <div class="buyer-order col-xs-9">
-			<table class="table table-hover table-bordered table-inverse">
-			    <thead>
-			        <tr class="info">
-			          <th class="col-xs-4">商品名</th>
-			          <th>単価（税込）</th>
-			          <th>数量</th>
-			          <th>小計</th>
-			          <th>製作ステータス</th>
-
-			        </tr>
-			    </thead>
-				<tbody>
-				<% if flash[:notice] %>
-		          	<div class="flash">
-		             <%= flash[:notice] %>
-		          	</div>
-	          	<% end %>
-				<% @order_items.each do |order_detail| %>
-					<tr>
-			            <td class="text-left">
-			              <%= order_item.item.name %>
-			            </td>
-			            <td class="text-right">
-			              ¥<%= tax_price(order_detail.item.tax_out_price).to_s(:delimited) %>
-			            </td>
-			            <td class="text-right">
-			              <%= order_item.amount %>
-			            </td>
-			            <td class="text-right">
-			              ¥<%= sub_price(order_item).to_s(:delimited) %>
-			            </td>
-			            <%= form_for(order_item, url: admin_order_items_path(order_item), method: :patch) do |f| %>
-			            <td>
-			            	<%= f.select :produciton_status, OrderItem.produciton_statuses.keys, class: "order_status" %>
-			            	<%= f.submit '更新'  ,class: "btn btn-warning" %>
-			            </td>
-			            <% end %>
-			      	</tr>
-				<% end %>
-				</tbody>
-			</table>
-	  </div>
-
-	  <div class="col-xs-3  billing">
-			<table class="table table-hover table-bordered table-condensed">
-				<tr>
-            		<th class="info">商品合計</th>
-					<td>¥<%= total_price(@order_items).to_s(:delimited) %></td>
-				</tr>
-				<tr>
-					<th class="info">送料</th>
-					<td>¥<%= @order.postage.to_s(:delimited) %></td>
-				</tr>
-				<tr>
-					<th class="info">請求金額合計</th>
-					<td>¥<%= @order.total_price.to_s(:delimited) %></td>
-				</tr>
-		    </table>
-	  </div>
-    <div class="col-xs-12">
-      <%= link_to "戻る", admin_orders_path, class: "glyphicon glyphicon-home btn btn-info" %>
-    </div>
-	  </div>
+      <br>
+      <div>
+          <p>
+          <strong class="col-xs-2">配送先</strong>
+          <%= (@order.customer.postal_code).to_s.insert(3, "-") %>
+          <%= @order.customer.address %>
+          </p>
+      </div>
+      <br>
+      <div>
+          <p>
+            <strong class="col-xs-2">支払い方法</strong>
+            <%= @order.payment_method %>
+          </p>
+      </div>
+      <br>
+      <div>
+          <p>
+            <strong class="col-xs-4">注文ステータス</strong>
+            <%= form_with model:@order, url: admin_order_path, local: true do |f| %>
+              <%= f.select :st_order, [["入金待ち",:waiting_for_payment],["入金確認",:payment_confirmation],["製作中",:production],["発送準備中",:shipping_preparation],["発送済み",:deposited]] %>
+              <%= f.submit "更新", class: 'btn btn-primary' %>
+            <% end %>
+          </p>
+      </div>
   </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-8">
+    <table class='order-show-table table'>
+      <thead>
+        <tr>
+          <th class="active">商品名</th>
+          <th class="active">単価（税込）</th>
+          <th class="active">数量</th>
+          <th class="active">小計</th>
+          <th class="active">製作ステータス</th>
+        <tr>
+      </thead>
+      <% @order_items.each do |order_item| %>
+      <tbody>
+        <tr>
+          <td class="col-xs-4"><%= order_item.item.name%></td>
+          <td class="col-xs-2">¥<%= (order_item.price*1.1).floor %></td>
+          <td><%= order_item.amount %></td>
+          <td class="col-xs-2">¥<%= (order_item.price * order_item.amount*1.1).floor %></td>
+          <td>
+            <%= form_with model:order_item, url: admin_order_item_path(order_item), local: true do |f| %>
+              <%= f.select :is_production, [["製作不可",:production_not_allowed],["製作待ち",:aiting_for_production],["製作中",:aiting_for_production],["製作完了",:prduction_conpleted]] %>
+              <%= f.submit "更新", class: 'btn btn-primary' %>
+            <% end %>
+          </td>
+        </tr>
+      </tbody>
+      <% end %>
+    </table>
+  </div>
+  <div class="col-xs-4">
+    <div>
+      <p>
+        <strong class="col-xs-3">商品合計</strong>
+         ¥<%= (@order.total_price - @order.postage)%>
+      </p>
+    </div>
+    <br>
+
+    <div>
+      <p>
+        <strong class="col-xs-2">送料</strong>
+        ¥<%= @order.postage %>
+      </p>
+    </div>
+    <br>
+
+    <div>
+      <p>
+        <strong class="col-xs-4">請求金額合計</strong>
+        ¥<%= @order.total_price %>
+      </p>
+    </div>
+    <br>
+  </div>
+</div>
+</div>

@@ -17,11 +17,8 @@
               <tr>
                 <td><%= link_to admin_order_path(order) do %><%= order.created_at.to_s(:datetime_jp) %><% end %></td>
                 <td><%= order.customer.last_name %><%= order.customer.first_name %></td>
-                <td><% order.order_items.each do |order_item| %>
-                <%= order_item.amount %>
-                <% end %>
-                </td>
-                <td><%= order.st_order %></td>
+                <td><%= order.order_items.sum(:amount) %></td>
+                <td><%= st.order %></td>
               </tr>
             <% end %>
           </tbody>

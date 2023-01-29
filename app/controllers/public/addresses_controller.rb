@@ -35,7 +35,7 @@ class Public::AddressesController < ApplicationController
 	  @address.destroy
     @addresses = current_customer.address
     flash.now[:alert] = "配送先を削除しました"
-	  # redirect_to customers_addresses_path
+	   redirect_to customers_addresses_path
 	end
 
 	private

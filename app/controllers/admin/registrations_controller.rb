@@ -8,7 +8,13 @@ class Admin::RegistrationsController < Devise::RegistrationsController
   # def new
   #   super
   # end
+  def after_sign_in_path_for(resource)
+      admin_orders_path
+  end
 
+  def after_sign_out_path_for(resource)
+    root_path
+  end
   # POST /resource
   # def create
   #   super

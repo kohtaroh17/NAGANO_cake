@@ -4,19 +4,18 @@ devise_for :customers, controllers: {
   registrations: "public/registrations",
   sessions: 'public/sessions'
 }
-  get 'about' => 'customer/items#about'
-  root 'public/items#top'
+get 'about' => 'public/homes#about'
+  root 'public/homes#top'
 
   scope module: :public do
     resources :items,only: [:index,:show]
+    
     get 'customer/edit' => 'customers#edit'
     put 'customer' => 'customers#update'
-
-    resources :customers,only: [:show] do
-     collection do
-         get 'quit'
-         patch 'out'
-      end
+    get 'customer' => 'customers#show'
+    get 'customer' => 'customers#destoroy'
+    get 'customer/quit' => 'customers#quit'
+    patch 'customer/out' => 'customers#out'
 
       resources :cart_items,only: [:index,:update,:create,:destroy] do
         collection do
@@ -27,12 +26,11 @@ devise_for :customers, controllers: {
       resources :orders,only: [:new,:index,:show,:create] do
         collection do
           post 'log'
-          get 'thanx'
+          get 'thanks'
         end
       end
 
       resources :addresses,only: [:index,:create,:edit,:update,:destroy]
-    end
    end
 
 devise_for :admin, controllers: {

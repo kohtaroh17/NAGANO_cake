@@ -1,38 +1,90 @@
-<% provide(:title, "新規会員登録") %>
-<div class="row">
-  <div class="col-xs-offset-1 col-xs-11">
+ <div class="contaier">
+    <h3>新規会員登録</h3>
 
-    <h2 class="head-line title_h2 text-center"><i class="fas fa-user-edit"></i>新規会員登録</h2>
+    <%= form_with model: @customer, url: customer_registration_path do |f| %>
+      <%= render "public/shared/error_messages", resource: @customer %>
+      <div class="row">
+        <label class="col-lg-3">名前</label>
+        <div class="col-lg-3">
+          <%= f.text_field :last_name,autoforcus: true, autocomplete: "last_name",  placeholder: "(姓)" %>
+        </div>
+        <div class="col-lg-3">
+          <%= f.text_field :first_name,autoforcus: true, autocomplete: "first_name",  placeholder: "(名)" %>
+        </div>
+      </div><br>
 
-    <%= form_with @customer, url:'/customers', method: :post do |f| %>
-      <%= render "layouts/error_messages", resource: resource %>
+      <div class="row">
+        <label class="col-lg-3">フリガナ</label>
+        <div class="col-lg-3">
+          <%= f.text_field :last_name_kana,autoforcus: true, autocomplete: "last_name_kana",  placeholder: "(セイ)" %>
+        </div>
+        <div class="col-lg-3">
+          <%= f.text_field :first_name_kana,autoforcus: true, autocomplete: "first_name_kana",  placeholder: "(メイ)" %>
+        </div>
+      </div><br>
 
-      <div class="field form-group col-xs-12">
-        <%= f.label :"名前", class: "col-sm-2 control-label" %>
-        <%= f.label :"(姓)", class: "col-sm-1 control-label" %>
-        <%= f.text_field :last_name, autofocus: true, class: "col-sm-3 form-control-static name" %>
-        <%= f.label :"(名)", class: "col-sm-1 control-label" %>
-        <%= f.text_field :first_name, autofocus: true, class: "col-sm-3 form-control-static name" %>
+
+      <div class="row">
+        <label class="col-lg-3">メールアドレス</label>
+        <div class="col-lg-3">
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "メールアドレス" %>
+        </div>
+      </div><br>
+
+
+      <div class="row">
+        <label class="col-lg-3">郵便番号（ハイフンなし）</label>
+        <div class="col-lg-3">
+          <%= f.text_field :postal_code, autofocus: true, autocomplete: "postal_code",  placeholder: "郵便番号" %>
+        </div>
+      </div><br>
+
+
+      <div class="row">
+        <label class="col-lg-3">住所</label>
+        <div class="col-lg-6">
+          <%= f.text_field :address, autofocus: true, autocomplete: "address", :size=>"60",  placeholder: "住所" %>
+        </div>
+      </div><br>
+
+
+      <div class="row">
+        <label class="col-lg-3">電話番号（ハイフンなし）</label>
+        <div class="col-lg-3">
+          <%= f.text_field :phone_number, autofocus: true, autocomplete: "phone_number",  placeholder: "電話番号" %>
+        </div>
+      </div><br>
+
+
+      <div class="row">
+        <label class="col-lg-3">パスワード
+        <% if @minimum_password_length %>
+          <em>(<%= @minimum_password_length %>文字以上)</em>
+        <% end %></label>
+        <div class="col-lg-3">
+          <%= f.password_field :password, autocomplete: "encrypted_password",  placeholder: "パスワード" %>
+        </div>
+      </div><br>
+
+
+      <div class="row">
+        <label class="col-lg-3">パスワード（確認用）</label>
+        <div class="col-lg-3">
+          <%= f.password_field :password_confirmation, autocomplete: "encrypted_password",  placeholder: "パスワード（確認）" %>
+        </div>
+      </div><br>
+
+      <div class="actions">
+        <%= f.submit "新規登録", class: "btn btn-success" %>
       </div>
-      <div class="form-group col-xs-9">
-       <div class="field form-group col-xs-9">
-        <%= f.label :"パスワード(6文字以上)", class: "col-sm-4 control-label" %>
-        <%= f.password_field :password, autocomplete: "new-password", class: "col-sm-4 form-control-static" %>
-      </div>
 
-      <div class="field form-group col-xs-9">
-        <%= f.label :"パスワード(確認用)", class: "col-sm-4 control-label" %>
-        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "col-sm-4 form-control-static" %>
-      </div>
 
-      <div class="actions col-xs-9">
-        <%= f.submit "新規登録",class: 'btn btn-success btn-lg col-xs-7' %>
-      </div>
-    <% end %>
-
-    <div class="col-xs-9">
-      <h2 class="head-line title_h2 text-center">既に登録済みの方</h2>
-      <p class="new-link"><%= render "public/shared/links" %>からログインしてください。</p>
+    <h3>既に登録済みの方</h3>
+    <div class="col-sm-3">
+      <%- if controller_name != 'sessions' %>
+        <%= link_to "こちら", new_session_path(resource_name) %>
+      <% end %>
+  からログインしてください
     </div>
+    <% end %>
   </div>
-</div>

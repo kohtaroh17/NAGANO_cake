@@ -1,12 +1,12 @@
 <% provide(:title, "会員一覧") %>
   <h2 class="head-line title_h2 text-center">
-    <%= full_name(@customer) %>さんの会員詳細
+    <%= @customer.last_name + @customer.first_name %>さんの会員詳細
   </h2>
   <div class="row">
     <div class="col-xs-8">
       <div class="field">
         <p>
-          顧客ID　　　　　<%= @customer.id %>
+          顧客ID<%= @customer.id %>
           <% if @customer.is_deleted == true %>
             <span>　<i class="fas fa-bullseye blue"></i>退会済
           <% elsif @customer.is_deleted == false %>
@@ -16,32 +16,32 @@
       </div>
       <div class="field">
         <p>
-          氏名　　　　　　<%= full_name(@customer) %>
+          氏名<%= @customer.last_name + @customer.first_name %>
         </p>
       </div>
       <div class="field">
         <p>
-          フリガナ　　　　<%= kana_full_name(@customer) %>
+          フリガナ<%= (@customer.last_name_kana + @customer.first_name_kana) %>
         </p>
       </div>
       <div class="field">
         <p>
-          郵便番号　　　　<%= @customer.postal_code %>
+          郵便番号<%= @customer.postal_code %>
         </p>
       </div>
       <div class="field">
         <p>
-          住所　　　　　　<%= @customer.residence %>
+          住所<%= @customer.address %>
         </p>
       </div>
       <div class="field">
         <p>
-          電話番号　　　　<%= @customer.phone_number %>
+          電話番号<%= @customer.phone_number %>
         </p>
       </div>
       <div class="field">
         <p>
-          メールアドレス　<%= @customer.email%>
+          メールアドレス<%= @customer.email%>
         </p>
       </div>
 

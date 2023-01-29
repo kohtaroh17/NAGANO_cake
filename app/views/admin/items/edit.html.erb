@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="row">
+    <%= form_with model: @item, url:admin_item_path(@item) do |f| %>
+
+    <div class="col-xs-5">
+     <h2>商品編集</h2>
+      <div class="item-img">
+      <%= image_tag @item.get_image(100,100) %>
+      </div>
+    </div>
+
+    <br><br><br>
+      <div class="col-xs-5 col-xs-offset-2">
+        <table class="new-form-table">
+          <tbody>
+            <tr>
+              <th>商品名</th>
+              <td><%= f.text_field :name, class: "form-control" %></td>
+            </tr>
+
+            <tr>
+              <th>商品説明</th>
+              <td><%= f.text_area :introduction, class: "form-control" %></td>
+            </tr>
+
+            <tr>
+              <th>ジャンル</th>
+              <td><%= f.collection_select :genre_id, Genre.all ,:id, :name, include_blank: "--選択してください--" %></td>
+            </tr>
+
+            <tr>
+              <th>税抜価格</th>
+              <td><%= f.text_field :price, class: "form-control" %></td>
+            </tr>
+
+            <tr>
+              <th>販売ステータス</th>
+              <td>
+                <%= f.radio_button :is_active, true %>販売中
+                <%= f.radio_button :is_active, false %>販売停止
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="text-right">
+        <%= f.submit "変更を保存" ,class: "btn btn-primary text-right" %>
+        </div>
+     </div>
+    <% end %>
+
+    </div>
+</div>
